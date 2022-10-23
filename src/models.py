@@ -7,66 +7,42 @@ from sqlalchemy import create_engine
 from eralchemy import render_er
 
 Base = declarative_base()
-
-""" class Person(Base):
-    __tablename__ = 'person'
-    # Here we define columns for the table person
-    # Notice that each column is also a normal Python instance attribute.
+class User(Base):
+    __tablename__ = 'User'
     id = Column(Integer, primary_key=True)
-    name = Column(String(250), nullable=False)
-
-class Address(Base):
-    __tablename__ = 'address'
-    # Here we define columns for the table address.
-    # Notice that each column is also a normal Python instance attribute.
-    id = Column(Integer, primary_key=True)
-    street_name = Column(String(250))
-    street_number = Column(String(250))
-    post_code = Column(String(250), nullable=False)
-    person_id = Column(Integer, ForeignKey('person.id'))
-    person = relationship(Person) """
-
-
-class Usuario(Base):
-    __tablename__ = 'usuarios'
-    id = Column(Integer, primary_key=True)
-    Nombre = Column(String(50),ForeignKey('fvplanets.Nombre'))
+    Nombre = Column(String(50))
     Apellido = Column(String(50))
     Email = Column(String(50))
-    Correo = Column(String(50))
     Contraseña = Column(String(250))
+class Follower(Base):
+    __tablename__='Follower'
+    id = Column(Integer, primary_key=True)
+    User_from_id =Column(Integer,ForeignKey('User.id'))
+    User_to_id =Column(Integer,ForeignKey('User.id'))
+    follower = relationship(User)
+class Post(Base):
+    __tablename__='Post'
+    id = Column(Integer, primary_key=True)
+    User_id = Column(Integer, ForeignKey('User.id'))
+    User = relationship(User)
 
+class Media(Base):
+    __tablename__='Media'
+    id = Column(Integer, primary_key=True)
+    url = Column(String(50))
+    post_id = Column(Integer, ForeignKey('Post.id'))
+    User = relationship(User)
+    Post = relationship(Post)
 
-class Personajes(Base):
-    __tablename__ = 'personajes'
-    personaje = Column(Integer, primary_key=True)
-    Nombre = Column(String(50),ForeignKey('fvpeople.IdPeople'))
-    Genero = Column(String(250))
-    Mundo_natal = Column(String(50), ForeignKey('planetas.id_planetas'))
-    Color_Ojos = Column(String(50))
-    Raza = Column(String(250))
-    rel=relationship(FvPeople)
-class Planetas(Base):
-    __tablename__ = 'planetas'
-    id_planetas = Column(Integer, primary_key=True)
-    Nombre = Column(String(50))
-    Poblacion = Column(Integer, primary_key=True)
-    Clima = Column(String(250))
-    Terreno = Column(String(250))
-    rel = relationship(Personajes)
-class FvPeople(Base):
-    __tablename__ = 'fvpeople'
-    IdPeople = Column(Integer, primary_key=True )
-    Nombre = Column(String(50),ForeignKey('personajes.Nombre'))
-    rel=relationship(Usuario)
-    people=relationship(Personajes)
+class Comment(Base):
+    __tablename__= 'comment'
+    id = Column(Integer, primary_key=True)
+    comment_text = Column(String(50))
+    author_id = Column(Integer, ForeignKey('User.id'))
+    post_id = Column(Integer, ForeignKey('Post.id')) 
+    commet = relationship(User)
+    commets = relationship(Post)
 
-class FvPlanets(Base):
-    __tablename__ = 'fvplanets'
-    IdPlanets = Column(Integer, primary_key=True)
-    Nombre = Column(String(50),ForeignKey('planetas.id_planetas'))
-    rel=relationship(Usuario)
-    planetas=relationship(Planetas)
 
 # Draw from SQLAlchemy base
 
